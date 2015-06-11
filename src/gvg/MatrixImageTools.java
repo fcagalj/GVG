@@ -14,12 +14,108 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.List;
 import javax.imageio.ImageIO;
 /**
  * Class with some static usefol methods that can be used in program.
  * @author frane
  */
 public class MatrixImageTools {
+    
+    //Exploring the neighbours of the Cell
+    public static  void findCellNeighbors(List<Cell> listToAddNeighb, int[][] map, int x, int y, boolean eightConnectivity){
+    /*Searching arround given cell (x, y), and found neighbors add to 
+     * list in argument. It is not important if the cell is on the edge; if 
+     * doesnt exist it just wont be added. Currently a,c,f and h cells are
+     * commented, just uncomment it if you want tu use 8 side neigburs.
+     * 
+     * Neighbors of X are signed as folows:
+     *             "a", "b", "c"
+     *             "d", "X", "e"
+     *             "f", "g", "h"
+     * @param listToAddNeighb
+     * @param map
+     * @param x
+     * @param y 
+     */
+        
+        //Cell a = null,b = null,c = null,d = null,e = null,f = null,g = null,h=null;
+        //a        
+        if(eightConnectivity&&((x-1)>=0)&&((y-1)>=0)){
+                int neig_x, neig_y;
+                neig_x=x-1;
+                neig_y=y-1;
+                Cell a=new Cell(neig_x, neig_y, map[neig_x][neig_y]);
+                //Cell a=new Cell((x-1),(y-1),map[][]);
+                listToAddNeighb.add(a);
+        }
+        //b
+        if(((y-1)>=0)){
+                int neig_x, neig_y;
+                neig_x=x;
+                neig_y=y-1;
+                Cell b=new Cell(neig_x, neig_y, map[neig_x][neig_y]);
+               // Cell b=new Cell((x),(y-1));
+                listToAddNeighb.add(b);
+        }
+        //c
+        if(eightConnectivity&&((x+1)<=(map.length-1)) && ((y-1)>=0)){
+                int neig_x, neig_y;
+                neig_x=x+1;
+                neig_y=y-1;
+                Cell c=new Cell(neig_x, neig_y, map[neig_x][neig_y]);
+                //Cell c=new Cell((x+1),(y-1));
+                listToAddNeighb.add(c);
+        }
+//        //d
+        if(((x-1)>=0)){
+                int neig_x, neig_y;
+                neig_x=x-1;
+                neig_y=y;
+                Cell d=new Cell(neig_x, neig_y, map[neig_x][neig_y]);
+                //Cell d=new Cell((x-1),(y));
+                listToAddNeighb.add(d);
+        }
+        //e
+        if(((x+1)<=(map.length-1))){
+                int neig_x, neig_y;
+                neig_x=x+1;
+                neig_y=y;
+                Cell e=new Cell(neig_x, neig_y, map[neig_x][neig_y]);
+                //Cell e=new Cell((x+1),(y));
+                listToAddNeighb.add(e);
+        }
+//        //f
+        if(eightConnectivity&&((x-1)>=0) && ((y+1)<=(map[0].length-1))){
+                int neig_x, neig_y;
+                neig_x=x-1;
+                neig_y=y+1;
+                Cell f=new Cell(neig_x, neig_y, map[neig_x][neig_y]);
+                //Cell f=new Cell((x-1),(y+1));
+                listToAddNeighb.add(f);
+        }
+        //g
+        if((y+1)<=(map[0].length-1)){
+                int neig_x, neig_y;
+                neig_x=x;
+                neig_y=y+1;
+                Cell g=new Cell(neig_x, neig_y, map[neig_x][neig_y]);
+                //Cell g=new Cell((x),(y+1));
+                listToAddNeighb.add(g);
+        }
+//        //h
+        if(eightConnectivity&&((x+1)<=(map.length-1))&&(y+1)<=(map[0].length-1)){
+                int neig_x, neig_y;
+                neig_x=x+1;
+                neig_y=y+1;
+                Cell h=new Cell(neig_x, neig_y, map[neig_x][neig_y]);
+                //Cell h=new Cell((x+1),(y+1));
+                listToAddNeighb.add(h);
+        }
+        
+    //the end of findCellNeighbors
+    }
+    
     /**
      * Output map to the console.
      */

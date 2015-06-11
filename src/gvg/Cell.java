@@ -8,10 +8,10 @@ package gvg;
      *  Representing each cell in the matrix with x, y values.
     */
     public class Cell{
-    int x,y;
+    int x,y, value;
     //int value;
-    Cell(int x, int y){
-        this.x=x;this.y=y;
+    Cell(int x, int y, int value){
+        this.x=x;this.y=y;this.value=value;
     }
     //This method is used when tw Cells are compareing, when 
     //adding or removing from the list.

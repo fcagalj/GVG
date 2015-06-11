@@ -88,11 +88,11 @@ List<Cell> closedList=new ArrayList();
             for(int i=0;i<map.length;i++){ //for i = 1:length(X) 
                 for(int j=0;j<map[0].length;j++)//loop trought column for each row
                 {
-                    Cell current=new Cell(i,j);
+                    Cell current=new Cell(i,j,map[i][j]);
                     if((openedList.contains(current)))//ignore obstacles //&&((map[i][j]==freeBlockValue)||(map[i][j]<itter))
                     {
                         List<Cell> neigh_X=new ArrayList();
-                        findCellNeighbors(neigh_X, map, i, j);
+                        MatrixImageTools.findCellNeighbors(neigh_X, map, i, j, true);
                         int lengthNeigh_X = neigh_X.size();
                         boolean haveValueIterMinusOne=false;
                         for(Cell neighbor:neigh_X)
@@ -111,7 +111,7 @@ List<Cell> closedList=new ArrayList();
                 }
             }
         }
-        System.out.println("*******************\n E N D  S T A T E: ");
+        System.out.println("*******************\n MAPPED MATRIX: ");
         //MatrixImageTools.printMapState(map, itter);
         MatrixImageTools.printMapToConsole(map);
         MatrixImageTools.exportMapToCSV(map, this.outputCSVFilePath);
@@ -142,11 +142,11 @@ public void printListState(List<Cell> list){
                 //System.out.println("Map: "+i+", "+j+", value= "+map[i][j]+" freeBlockVal="+freeBlockValue);
                 if(map[i][j]==freeBlockValue){
                     //System.out.println("Adding to opeblocks: "+i+", "+j+", value= "+map[i][j]+" freeBlockVal="+freeBlockValue);
-                    Cell openedCell=new Cell(i,j);
+                    Cell openedCell=new Cell(i,j,map[i][j]);
                     openedList.add(openedCell);
                 }
                 else{
-                    Cell closedCell=new Cell(i,j);
+                    Cell closedCell=new Cell(i,j,map[i][j]);
                     closedList.add(closedCell);
                 }
             }
@@ -160,69 +160,69 @@ public void printListState(List<Cell> list){
     private boolean isInBorder(int x, int[][] map){
         return false;
     }
-    
-    //Exploring the neighbours of the Cell
-    private void findCellNeighbors(List<Cell> listToAddNeighb, int[][] map, int x, int y){
-    /*Searching arround given cell (x, y), and found neighbors add to 
-     * list in argument. It is not important if the cell is on the edge; if 
-     * doesnt exist it just wont be added. Currently a,c,f and h cells are
-     * commented, just uncomment it if you want tu use 8 side neigburs.
-     * 
-     * Neighbors of X are signed as folows:
-     *             "a", "b", "c"
-     *             "d", "X", "e"
-     *             "f", "g", "h"
-     * @param listToAddNeighb
-     * @param map
-     * @param x
-     * @param y 
-     */
-        
-        //Cell a = null,b = null,c = null,d = null,e = null,f = null,g = null,h=null;
-        //a        
-        if(((x-1)>=0)&&((y-1)>=0)){
-                Cell a=new Cell((x-1),(y-1));
-                listToAddNeighb.add(a);
-        }
-        //b
-        if(((y-1)>=0)){
-                Cell b=new Cell((x),(y-1));
-                listToAddNeighb.add(b);
-        }
-        //c
-        if(((x+1)<=(map.length-1)) && ((y-1)>=0)){
-                Cell c=new Cell((x+1),(y-1));
-                listToAddNeighb.add(c);
-        }
-//        //d
-        if(((x-1)>=0)){
-                Cell d=new Cell((x-1),(y));
-                listToAddNeighb.add(d);
-        }
-        //e
-        if(((x+1)<=(map.length-1))){
-                Cell e=new Cell((x+1),(y));
-                listToAddNeighb.add(e);
-        }
-//        //f
-        if(((x-1)>=0) && ((y+1)<=(map[0].length-1))){
-                Cell f=new Cell((x-1),(y+1));
-                listToAddNeighb.add(f);
-        }
-        //g
-        if((y+1)<=(map[0].length-1)){
-                Cell g=new Cell((x),(y+1));
-                listToAddNeighb.add(g);
-        }
-//        //h
-        if(((x+1)<=(map.length-1))&&(y+1)<=(map[0].length-1)){
-                Cell h=new Cell((x+1),(y+1));
-                listToAddNeighb.add(h);
-        }
-        
-    //the end of findCellNeighbors
-    }
-    
+////    
+////    //Exploring the neighbours of the Cell
+////    private void findCellNeighbors(List<Cell> listToAddNeighb, int[][] map, int x, int y){
+////    /*Searching arround given cell (x, y), and found neighbors add to 
+////     * list in argument. It is not important if the cell is on the edge; if 
+////     * doesnt exist it just wont be added. Currently a,c,f and h cells are
+////     * commented, just uncomment it if you want tu use 8 side neigburs.
+////     * 
+////     * Neighbors of X are signed as folows:
+////     *             "a", "b", "c"
+////     *             "d", "X", "e"
+////     *             "f", "g", "h"
+////     * @param listToAddNeighb
+////     * @param map
+////     * @param x
+////     * @param y 
+////     */
+////        
+////        //Cell a = null,b = null,c = null,d = null,e = null,f = null,g = null,h=null;
+////        //a        
+////        if(((x-1)>=0)&&((y-1)>=0)){
+////                Cell a=new Cell((x-1),(y-1));
+////                listToAddNeighb.add(a);
+////        }
+////        //b
+////        if(((y-1)>=0)){
+////                Cell b=new Cell((x),(y-1));
+////                listToAddNeighb.add(b);
+////        }
+////        //c
+////        if(((x+1)<=(map.length-1)) && ((y-1)>=0)){
+////                Cell c=new Cell((x+1),(y-1));
+////                listToAddNeighb.add(c);
+////        }
+//////        //d
+////        if(((x-1)>=0)){
+////                Cell d=new Cell((x-1),(y));
+////                listToAddNeighb.add(d);
+////        }
+////        //e
+////        if(((x+1)<=(map.length-1))){
+////                Cell e=new Cell((x+1),(y));
+////                listToAddNeighb.add(e);
+////        }
+//////        //f
+////        if(((x-1)>=0) && ((y+1)<=(map[0].length-1))){
+////                Cell f=new Cell((x-1),(y+1));
+////                listToAddNeighb.add(f);
+////        }
+////        //g
+////        if((y+1)<=(map[0].length-1)){
+////                Cell g=new Cell((x),(y+1));
+////                listToAddNeighb.add(g);
+////        }
+//////        //h
+////        if(((x+1)<=(map.length-1))&&(y+1)<=(map[0].length-1)){
+////                Cell h=new Cell((x+1),(y+1));
+////                listToAddNeighb.add(h);
+////        }
+////        
+////    //the end of findCellNeighbors
+////    }
+////    
     /************************************************/
     /****************Getters, Setters****************/
     /************************************************/
