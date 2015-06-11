@@ -26,8 +26,9 @@ public class MatrixImageTools {
     public static  void findCellNeighbors(List<Cell> listToAddNeighb, int[][] map, int x, int y, boolean eightConnectivity){
     /*Searching arround given cell (x, y), and found neighbors add to 
      * list in argument. It is not important if the cell is on the edge; if 
-     * doesnt exist it just wont be added. Currently a,c,f and h cells are
-     * commented, just uncomment it if you want tu use 8 side neigburs.
+     * doesnt exist it just wont be added. If parametar eightConnectivity is 
+     * set true, function will search for eight neighburs, and if it is set to
+     * false, it will search 4 neighburs.
      * 
      * Neighbors of X are signed as folows:
      *             "a", "b", "c"
