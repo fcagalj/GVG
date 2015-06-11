@@ -1,0 +1,46 @@
+Hello again!) Sorry, it was a bit uncomfortable to describe everything when I was in the lab.
+
+So, I have rearranged the structure of the project and as you can see all of the classes are in the same package.
+
+Now I have five classes files there:
+1. GVG.java is the main (which was the FindRobotPath in the previous version)
+2. BrushFire.java is where the Brushfire algorithm executed.
+3. gvgAlgorithm is where GVG algorithm should be executed. The output of the algorithm should be the GVG list.
+4. ImageToMatrix and MatrixImageTools are the same as in previous version.
+
+So the idea is that everything is executed up to the Brushfire algorithm. Then main class GVG.java calls the gvgAlgorithm.
+This algorithm should work on the map which has been provided by BrushFire.java. So not the old map with zeros and 255's, but the new,
+updated values by BrushFire:
+
+original map > Brushfire > gvgAlgorithm
+
+This algorithm is also working with the open_list. But here, it adds all the cells not equal to 0 to the open_list (so 1,2,3,4,5....etc.)
+
+The structure of the gvgAlgorithm is the same as the Brusfire's except further moments:
+Here, we don't search only for the itter-1 , but also for the so called max_memb and the_same.
+Which are itter+1 and itter itself.
+There are three main rules to the cell being added to the GVG list:
+
+• Having two min_neigh, two the_same and not being added in the GVD set before
+• Having one min_neigh or max_neigh and three the_same
+• Having three min_neigh and one the_same
+
+As the output we have the matrix (n x 3) with the name of GVDset (or GVDlist, whatever), with the following structure:
+GVDset = [ 1   1 1  ; 2 2 2; 3 xx yy; etc. ]
+where:      val  x  y;   // so the first number stands for the value and second and third for the coordinates
+
+After we get this GVD set, we need to print it combined with the original image.
+In Matlab I do it like this: I make the matrix of zeros of the size of original image and print the value 1 on the coordinates of every point in GVD set. Like this
+
+
+A = zeros(size(IMAG));
+w = GVD(2:3,1:end);
+ for j = 1:length(GVD)
+   A(w(1,j),w(2,j))=1;
+   IMAGnb(w(1,j),w(2,j))=0;
+ end
+
+What I have in the output is the image with the walls and obstacles which are ones in the matrix and black color in the image, black spaces which are zeros in the matrix and white in the image, and
+the possible road for the robot which is also ones in the matrix and black on the image. 
+
+Best Regards
