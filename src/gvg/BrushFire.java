@@ -78,9 +78,9 @@ public class BrushFire {
         
 public void mapMatrix(int[][] map){
 List<Cell> openedList=new ArrayList();
-List<Cell> closedList=new ArrayList();
+//List<Cell> closedList=new ArrayList();
         
-        populateOpenedAndClosedList(map, openedList, closedList); // To populate Opened and closed list
+        populateOpenedList(map, openedList); // To populate Opened and closed list
 
         int itter = 0;
         while(!openedList.isEmpty()){ //isempty(open_list)==0
@@ -89,7 +89,8 @@ List<Cell> closedList=new ArrayList();
                 for(int j=0;j<map[0].length;j++)//loop trought column for each row
                 {
                     Cell current=new Cell(i,j,map[i][j]);
-                    if((openedList.contains(current)))//ignore obstacles //&&((map[i][j]==freeBlockValue)||(map[i][j]<itter))
+                    //if((openedList.contains(current)))//ignore obstacles //&&((map[i][j]==freeBlockValue)||(map[i][j]<itter))
+                    if(map[i][j]==freeBlockValue)//ignore obstacles 
                     {
                         List<Cell> neigh_X=new ArrayList();
                         MatrixImageTools.findCellNeighbors(neigh_X, map, i, j, true);
@@ -134,7 +135,7 @@ public void printListState(List<Cell> list){
     /* Looping trought matrix and createnig 
      * @param map
      */
-    private void populateOpenedAndClosedList(int[][] map, List<Cell> openedList, List<Cell> closedList){
+    private void populateOpenedList(int[][] map, List<Cell> openedList){
         //System.out.println("list_x: "+map[0].length+" List_y: "+map.length);
         //System.out.println("Map : "+map[6][5]);
         for(int i=0;i<map.length;i++){
@@ -145,13 +146,13 @@ public void printListState(List<Cell> list){
                     Cell openedCell=new Cell(i,j,map[i][j]);
                     openedList.add(openedCell);
                 }
-                else{
-                    Cell closedCell=new Cell(i,j,map[i][j]);
-                    closedList.add(closedCell);
-                }
+//                else{
+//                    Cell closedCell=new Cell(i,j,map[i][j]);
+//                    closedList.add(closedCell);
+//                }
             }
         }
-        //the end of populateOpenedAndClosedList
+        //the end of populateOpenedList
     }
     
     /*
