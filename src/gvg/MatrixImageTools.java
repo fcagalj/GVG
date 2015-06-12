@@ -229,11 +229,13 @@ public class MatrixImageTools {
      * @return 
      */
     public static int[][] transponseMatrix255values(int[][] origMap){
-        int[][] map=origMap;
+        int[][] map=new int[origMap.length][origMap[0].length];;
         for (int i=0;i<origMap.length;i++){
             for(int j=0;j<origMap[0].length;j++){
                 if(origMap[i][j]==1){
                     map[i][j]=255;
+                }else{
+                    map[i][j]=origMap[i][j];
                 }
             }
         }

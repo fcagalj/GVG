@@ -19,12 +19,23 @@ public class GVG {
         * "ImageToMatrix.java" class.
         */
         String inputImagePath="1.png";
-        String outpuImagePath="_output//outputImage_2.png";
-        String outpuCSVPath="_output//outputCSV_2.csv";
+        
+        //Output of image convereted in matrix, without any changes to them
+        String outpuImagePath="_output//1_outputImage.png";
+        String outpuCSVPath="_output//1_outputCSV.csv";
+        
+        //Output of originalMap getted with BlushFire algorithm 
+        String outpuMappedImagePath="_output//2_outputMappedImage.png";
+        String outpuMappedCSVPath="_output//2_outputMappedCSV.csv";
 
-        String outpuGVGImagePath="_output//outputGVGImage_2.png";
-        String outpuGVGCSVPath="_output//outputGVGCSV_2.csv";
+        //Output of GVG matrix
+        String outpuGVGImagePath="_output//3_outputGVGImage.png";
+        String outpuGVGCSVPath="_output//3_outputGVGCSV.csv";
 
+        //Output of combined GVG matrix on top of original image, where 
+        String outpuCombinedImagePath="_output//4_outputCombinedImage.png";
+        String outpuCombinedCSVPath="_output//4_outputCombinedCSV.csv";
+        
         int[][] gvgArray;      //gvgArray and gvgList both save same GCG result
         List<Cell> gvgSet;
     
@@ -37,19 +48,31 @@ public class GVG {
         
         
         ImageToMatrix mapFile=new ImageToMatrix(gvg.inputImagePath, gvg.outpuImagePath, gvg.outpuCSVPath);
-        //...and stores the input in the "map" variable 
-        int[][] map=mapFile.convertImage(1);
+        //...and stores the input in the "originalMap" variable 
+        int[][] originalMap=mapFile.convertImage(1);
         
         //Refering to BrushFire class to execute the algorithm
-        BrushFire bfm=new BrushFire(map,"_output//mappedImage.png","_output//mappedCSV.csv");
+        BrushFire bfm=new BrushFire(originalMap, gvg.outpuMappedImagePath, gvg.outpuMappedCSVPath);
         
         int[][] prepairedMap = bfm.getMap();
         
-        gvg.doGVG(prepairedMap);
+        int[][] GVGSet=gvg.doGVG(prepairedMap);
 
+        int[][] combinedMatrix=gvg.combineMatrix(originalMap, GVGSet);
+                
+        System.out.println("*******************\n COMBINED GVG ON TOP OF ORIGINAL MATRIX");
+
+        MatrixImageTools.printMapToConsole(combinedMatrix);
+        MatrixImageTools.exportMapToCSV(combinedMatrix, gvg.outpuCombinedCSVPath);
+        MatrixImageTools.exportMatrixToImageFile(combinedMatrix, gvg.outpuCombinedImagePath);
+        
     }
-    
-    public void doGVG(int[][] map){
+    /**
+     * Produce matrix with background=1, and GVG cells=0;
+     * @param map
+     * @return 
+     */
+    public int[][] doGVG(int[][] map){
 
         int[][] GVGSet=this.initArray(map);
         
@@ -57,7 +80,7 @@ public class GVG {
             for(int j=0;j<map[0].length;j++)//loop trought column for each row
             {
                 Cell current=new Cell(i,j,map[i][j]);
-                //if((openedList.contains(current)))//ignore obstacles //&&((map[i][j]==freeBlockValue)||(map[i][j]<itter))
+                //if((openedList.contains(current)))//ignore obstacles //&&((originalMap[i][j]==freeBlockValue)||(originalMap[i][j]<itter))
                 if(map[i][j]!=0) //(openedList.contains(current))
                 {
                     List<Cell> neigh_X=new ArrayList();
@@ -83,7 +106,7 @@ public class GVG {
                            ))
                         {
                             //GVGset.add(current);
-                            GVGSet[i][j]=1;
+                            GVGSet[i][j]=0; //1 for white
                             break;
                         }
                     }
@@ -97,15 +120,17 @@ public class GVG {
         MatrixImageTools.printMapToConsole(GVGSet);
         MatrixImageTools.exportMapToCSV(GVGSet, outpuGVGCSVPath);
         MatrixImageTools.exportMatrixToImageFile(GVGSet, outpuGVGImagePath);
+        
+        return GVGSet;
     }
     public void populateOpenedList(int[][] map, List<Cell> openedList){
-        //System.out.println("list_x: "+map[0].length+" List_y: "+map.length);
-        //System.out.println("Map : "+map[6][5]);
+        //System.out.println("list_x: "+originalMap[0].length+" List_y: "+originalMap.length);
+        //System.out.println("Map : "+originalMap[6][5]);
         for(int i=0;i<map.length;i++){
             for(int j=0;j<map[0].length;j++){
-                //System.out.println("Map: "+i+", "+j+", value= "+map[i][j]+" freeBlockVal="+freeBlockValue);
+                //System.out.println("Map: "+i+", "+j+", value= "+originalMap[i][j]+" freeBlockVal="+freeBlockValue);
                 if(map[i][j]!=0){
-                    //System.out.println("Adding to opeblocks: "+i+", "+j+", value= "+map[i][j]+" freeBlockVal="+freeBlockValue);
+                    //System.out.println("Adding to opeblocks: "+i+", "+j+", value= "+originalMap[i][j]+" freeBlockVal="+freeBlockValue);
                     Cell openedCell=new Cell(i,j,map[i][j]);
                     openedList.add(openedCell);
                 }
@@ -113,25 +138,42 @@ public class GVG {
         }
 
     }
-    // clone two dimensional array
-    public int[][] cloneArray(int[][] a) {
-        int[][] b = new int[a.length][];
-        for (int i = 0; i < a.length; i++) {
-            b[i] = a[i].clone();
-        }
-        return b;
-    }
+    /**
+     * Initiate matrix with all values 1.
+     * @param a
+     * @return 
+     */
     public int[][] initArray(int[][] a){
         int[][] b = new int[a.length][a[0].length];
         //System.out.println("***********************************");
         for(int i=0;i<a.length;i++){
             for(int j=0;j<a[0].length;j++){
-                b[i][j]=0;
+                b[i][j]=1; //1 - white, 0-black
             }
         }
         return b;
     }
-    
+    /**
+     * Combine two matrixs so that they act as two layers, where second is on top
+     * of first. Second layer's baskground is considered value 1, so if seconds
+     * matrix value is different from 1, it will be displayed, otherway it will
+     * be displayed first matrix.
+     * @return 
+     */
+    public int[][] combineMatrix(int[][] bottom, int[][] top){
+        int[][] combined=new int[bottom.length][bottom[0].length];
+        for (int i=0;i<bottom.length;i++){
+            for (int j=0;j<bottom.length;j++){
+                if(top[i][j]!=1){
+                    combined[i][j]=top[i][j];
+                }else{
+                    combined[i][j]=bottom[i][j];
+                }
+            }
+        }
+        
+        return combined;
+    }
     public int[][] getGvgArray() {
         return gvgArray;
     }
@@ -139,6 +181,4 @@ public class GVG {
     public List<Cell> getGvgSet() {
         return gvgSet;
     }    
-
-    
 }

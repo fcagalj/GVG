@@ -39,7 +39,7 @@ public class BrushFire {
         //the end of BrushFire
     }
     // If we have the input, we work with it
-     public BrushFire(int[][] map, String outputImagepath, String outputCSVPath)
+    public BrushFire(int[][] map, String outputImagepath, String outputCSVPath)
     {
         this(outputImagepath, outputCSVPath);
         this.map=MatrixImageTools.transponseMatrix255values(map);
